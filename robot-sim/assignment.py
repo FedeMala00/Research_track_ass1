@@ -7,4 +7,5 @@ R = Robot()
 
 
 while 1:
-    pass
+	drive(10,1)
+pass
