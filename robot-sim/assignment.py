@@ -3,13 +3,11 @@ from __future__ import print_function
 import time
 from sr.robot import *
 
-#CIAO
 a_th = 2.0
 """ float: Threshold for the control of the orientation"""
 
 d_th = 0.4
 """ float: Threshold for the control of the linear distance"""
-
 
 R = Robot()
 
@@ -32,6 +30,7 @@ def turn(speed, seconds):
     R.motors[0].m1.power = 0
 
 # Function which returns the distance and relative angle 
+# to the token in the robot field of view and that is in "code" which is a list 
 def find_token_new(code):
     
     dist = 100
@@ -66,9 +65,9 @@ def find_token(code_list):
 def reach_token(code):
     var = True
     while var:
-        dist, rot_y = find_token(code)  # we look for markers
+        dist, rot_y = find_token(code)  # we look for markers absent in code that is a list
         if dist == -1:
-            turn(10, 1)  #if no tokens are detected it turns
+            turn(10, 1)  # if no tokens are detected it turns
 
         elif dist < d_th:
             print("Found it!")
@@ -76,12 +75,13 @@ def reach_token(code):
             print("Gotcha!") 
             var = False             
             dist_list = []
+            # for loop to create a list containing all the dist values of the token
             for i in R.see():
                 dist_list.append(i.centre.polar.length)
-
-            min_val = min(dist_list)
-            min_index = dist_list.index(min_val)                                
-            return R.see()[min_index].info.code            
+            
+            min_val = min(dist_list)  # select the minimum distance token (that is the grabbed one)
+            min_index = dist_list.index(min_val)  # find the correspondent index                             
+            return R.see()[min_index].info.code  # return the code of the grabbed token     
 
         elif -a_th <= rot_y <= a_th:  # if the robot is well aligned with the token, we go forward
             print("Ah, here we are!.")
@@ -93,49 +93,22 @@ def reach_token(code):
             print("Right a bit...")
             turn(+2, 0.5)
 
-def lista_codici():
-
-    lista_codici = []
-
-    for i in R.see():
-        lista_codici.append(i.info.code)
-
-    return lista_codici
-
-
-def dist_rot(code):
-    while True:
-        code_list = lista_codici()
-        if code in code_list:
-         for i in R.see():
-            if i.info.code == code:
-                dist = i.dist
-                ang = i.rot_y
-                return dist, ang
-                False
-        else:
-             turn(+3, 0.5)
-             True
-
-def reach_dist_rot(code,variabile):
+# Function to reach the clustering point 
+def reach_dist_rot(code):
     var = True
-    d_th_new = 0.6
+    d_th_new = 0.6 # chosen this value because 0.4 is used to grab, so release should consider the fact that the robot is holding the token 
     while var:
-        dist, rot_y = find_token_new(code) # we look for markers
-        if dist == -1:
-            print("I don't see any token!!")
-            turn(10, 1)  # if no markers are detected, the program ends
+        dist, rot_y = find_token_new(code) # we look for markers whose code is in the given list "code" because it contains the code of the clustering point 
+        if dist == -1:                     # + all the already released tokens. So every time one is released is added to this list 
+            print("Turning to see clustering point")
+            turn(10, 1)  # the robot turns
 
-        elif dist < d_th_new and variabile == 1:
-            print("Found it!")
-            R.release()
+        elif dist < d_th_new:
+            print("Arrived to clustering point")
+            R.release() # the token is released 
             var = False
             return 0
-        
-        elif dist < d_th_new and variabile != 1:
-            time.sleep(0.2)
-            var = False            
-        
+
         elif -a_th <= rot_y <= a_th:  # if the robot is well aligned with the token, we go forward
             print("Ah, here we are!.")
             drive(30, 0.5)
@@ -146,22 +119,23 @@ def reach_dist_rot(code,variabile):
             print("Right a bit...")
             turn(+2, 0.5)
 
-
+# Function used to perform an exploration in order to count how many tokens are present 
 def exploration():
-    drive(40,7)
+    drive(40,7) # Valued chosen after several trials which allows the robot to go near the center
     lista = []
-    first_ang = R.see()[0].centre.polar.rot_y
-    token_code_correspondent = R.see()[0].info.code
+    first_ang = R.see()[0].centre.polar.rot_y  # selecting the relative angle of the first seen token  
+    token_code_correspondent = R.see()[0].info.code  # storing the code of the first seen token
     while True:
-        turn(2, 0.5)
+        turn(2, 0.5) 
         for token in R.see():
-         lista.append(token.info.code)
+         lista.append(token.info.code) # add all the seen token while the robot rotates
         for token in R.see():
-            if token.info.code == token_code_correspondent and first_ang-2 <= token.centre.polar.rot_y <= first_ang-0.5:
-                lista_elem_unici = set(lista)
+            # condition to stop turning the robot because when the robot sees the first seen token and its relative angle is slightly less than the starting one, the robot has make a rotation of about 360 deg
+            if token.info.code == token_code_correspondent and first_ang-2 <= token.centre.polar.rot_y <= first_ang-0.2:  
+                lista_elem_unici = set(lista)                                                                      
                 False
                 #print(lista_elem_unici)
-                return len(lista_elem_unici)
+                return len(lista_elem_unici)  # return number of tokens
 
 
 
@@ -192,13 +166,13 @@ def main():
     # it stops when the number of released tokens is equal to the number of tokens seen by the robot in the exploration
     while True:
 
-        codice = reach_token(list_grabbed_token)
-        print(list_grabbed_token)    
+        codice = reach_token(list_grabbed_token)  # codice is equal to the code of the the grabbed token which CAN'T be the token corresponding to clustering point
+        print(list_grabbed_token)                 # because it is already contained in list_grabbed_token
         print(find_token(list_grabbed_token))
-        reach_dist_rot(list_grabbed_token,1)
-        list_grabbed_token.append(codice)
-        if len(list_grabbed_token) ==  num_tot_token:
-            var = False
+        reach_dist_rot(list_grabbed_token)  # the grabbed token is carried to the clustering point and released 
+        list_grabbed_token.append(codice)  # the code of the grabbed token is added to the list of already grabbed token 
+        if len(list_grabbed_token) ==  num_tot_token:  # condition to stop the execution when all tokens are grouped 
+            False
             print("Grouped every token")
             exit() 
 
