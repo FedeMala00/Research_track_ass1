@@ -6,6 +6,7 @@ Federico Malatesta (S4803603)
 
 This is a simple, portable robot simulator developed by [Student Robotics](https://studentrobotics.org).
 Some of the arenas and the exercises have been modified for the Research Track I course.
+
 The goal of this first assignment is to group all the tokens in a point of your choice
 
 Installing and running
