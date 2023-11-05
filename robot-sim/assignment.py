@@ -15,12 +15,7 @@ R = Robot()
 
 
 def drive(speed, seconds):
-    """
-    Function for setting a linear velocity
 
-    Args: speed (int): the speed of the wheels
-          seconds (int): the time interval
-    """
     R.motors[0].m0.power = speed
     R.motors[0].m1.power = speed
     time.sleep(seconds)
@@ -29,18 +24,14 @@ def drive(speed, seconds):
 
 
 def turn(speed, seconds):
-    """
-    Function for setting an angular velocity
 
-    Args: speed (int): the speed of the wheels
-          seconds (int): the time interval
-    """
     R.motors[0].m0.power = speed
     R.motors[0].m1.power = -speed
     time.sleep(seconds)
     R.motors[0].m0.power = 0
     R.motors[0].m1.power = 0
 
+# Function which returns the distance and relative angle 
 def find_token_new(code):
     
     dist = 100
@@ -54,15 +45,11 @@ def find_token_new(code):
     else:
         return dist, rot_y
 
-
+# Function which returns the distance and the relative angle to the closest token
+# that is NOT in the code_list given as input.
+# This function will be used in order to avoid grabbing all the tokens already grabbed
 def find_token(code_list):
-    """
-    Function to find the closest token
-
-    Returns:
-        dist (float): distance of the closest token (-1 if no token is detected)
-        rot_y (float): angle between the robot and the token (-1 if no token is detected)
-    """
+ 
     dist = 100
     for token in R.see():
       if token.info.code not in code_list:
@@ -74,14 +61,14 @@ def find_token(code_list):
     else:
         return dist, rot_y
 
-
+# Function which makes the robot grab the closest token whose code is absent in the code list given as input,
+# and returns the code of the grabbed token (this return is necessary for adding the correspondent token to the already grabbed token list)
 def reach_token(code):
     var = True
     while var:
         dist, rot_y = find_token(code)  # we look for markers
         if dist == -1:
-            print("I don't see any token!!")
-            turn(10, 1)  # if no markers are detected, the program ends
+            turn(10, 1)  #if no tokens are detected it turns
 
         elif dist < d_th:
             print("Found it!")
@@ -147,8 +134,7 @@ def reach_dist_rot(code,variabile):
         
         elif dist < d_th_new and variabile != 1:
             time.sleep(0.2)
-            var = False
-            #exit()
+            var = False            
         
         elif -a_th <= rot_y <= a_th:  # if the robot is well aligned with the token, we go forward
             print("Ah, here we are!.")
@@ -182,22 +168,28 @@ def exploration():
 
 
 def main():
-    #print(R.see())
+    # Creation of a list that will store all the distances of the tokens that can be seen by the robot
     dist_list = []
     for i in R.see():
         dist_list.append(i.centre.polar.length)
 
+    # Returning the minimum distance and the index of the correspondent token 
     min_val = min(dist_list)
     min_index = dist_list.index(min_val)
-
     print(min_val)
     print(min_index)
+
+    # Creation of the list containing the code of the nearest token (that will be the one near which the others will be deposited),
+    # and all the already grabbed tokens 
     list_grabbed_token = []
     list_grabbed_token.append(R.see()[min_index].info.code)
     print(list_grabbed_token)
 
+    # Calling the function to perform an exploration in order to identify how many tokens are present
     num_tot_token = exploration()
 
+    # While cycle used to to grab every token,
+    # it stops when the number of released tokens is equal to the number of tokens seen by the robot in the exploration
     while True:
 
         codice = reach_token(list_grabbed_token)
