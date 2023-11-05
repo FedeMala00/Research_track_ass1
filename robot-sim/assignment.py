@@ -3,7 +3,7 @@ from __future__ import print_function
 import time
 from sr.robot import *
 
-
+#CIAO
 a_th = 2.0
 """ float: Threshold for the control of the orientation"""
 
