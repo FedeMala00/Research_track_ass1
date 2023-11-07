@@ -82,7 +82,7 @@ for m in markers:
 [sr-api]: https://studentrobotics.org/docs/programming/sr/
 
 ### `main` function description ### 
-The first step is to find the token closest to the robot that is in its field of view, and it will be the clustering point. This is done by a `for` loop which allows to fill a list with the `i.centre.polar.length` that is the current distance to the Robot, then it is possible to retrieve the minimum value and the correspondent index which represent the closest token.  
+The first step is to find the token closest to the robot that is in its field of view, and it will be the clustering point. This is done by a `for` loop which allows to fill a list with the `i.centre.polar.length` that is the current token's distance to the Robot, then it is possible to retrieve the minimum value and the correspondent index which represent the closest token.  
 The code thus obtained is stored in a new list `list_grabbed_token`. 
 
 The next step is to perform an exploration with the robot in order to determine the number of total tokens, for doing this the robot moves towards the center with `drive(40,7)` which is a particular value chosen after several trials and and after assuming that the robot is not facing the wall (there would be a problem otherwise).  
