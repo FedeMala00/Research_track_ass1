@@ -102,7 +102,7 @@ The subsequently step is to compute how many tokens the robot sees during the ro
 The first step is to find the token closest to the robot that is in its field of view, and it will be the clustering point. This is done by a `for` loop which allows to fill a list with the `i.centre.polar.length` that is the current token's distance to the robot, then it is possible to retrieve the minimum value and the correspondent index which indicate the closest token.  
 The code thus obtained is stored in a new list `list_grabbed_token`. 
 
-The next step is to perform an exploration with the robot in order to determine the number of total tokens, to do this the robot moves towards the center with `drive(40,7)` which is a particular value chosen after several trials and and after assuming that the robot is not facing the wall (there would be a problem otherwise).  
+The next step is to perform an exploration with the robot in order to determine the number of total tokens, to do this the robot moves towards the center with `drive(40,7)` which is a particular value chosen after several trials and after assuming that the robot is not facing the wall (there would be a problem otherwise).  
 There it performs a rototation of about 360 degree and collect all the seen tokens in a list and their number is returned.
 
 Subsequently is executed a `while` loop in which by means of `reach_token` a token is grabbed (the process is more detailed in the comments) and the correspondent code is returned.  
