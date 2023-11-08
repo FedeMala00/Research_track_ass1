@@ -86,7 +86,7 @@ Brief description of all the functions used.
 
 #### `find_token_new` and `find_token` ####
 This function is used in order to retrieve the relative distance and angle to a token that is in the input (`code`) which is a list containg codes of tokens.  
-`find_token_new` is used for the first time in the `reach_dist_rot` function which allows the robot to reach the clustering point (because it corresponds to the code of the first seen token that is added to the  (`code`) list).  
+`find_token_new` is used for the first time in the `reach_dist_rot` function which allows the robot to reach the clustering point (because it corresponds to the code of the first seen token that is added to the  input (`code`) list).  
 `find_token` works the same way however allows the robot to avoid grabbing a token which has already been grabbed beacause it checks between all the tokens in its field of view if the code is NOT contained in the `code_list` input and if so relative distance and angle are returned.
 
 #### `reach_token` and `reach_dist_rot` ####
