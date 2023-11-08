@@ -30,18 +30,23 @@ def turn(speed, seconds):
     R.motors[0].m1.power = 0
 
 # Function which returns the distance and relative angle 
-# to the token in the robot field of view and that is in "code" which is a list 
+# to the token in the robot field of view and that is in the list "code"
 def find_token_new(code):
     
     dist = 100
+    # Loop through all tokens the robot sees
     for token in R.see():
+       # Check if the token's code is in the provided 'code' list
        if token.info.code in code:
+        # If the token's distance is less than the current minimum distance
         if token.dist < dist:
+            # Update the minimum distance and store the token's rotation angle
             dist = token.dist
             rot_y = token.rot_y
-    if dist == 100:
+    if dist == 100:   # If no token matching the 'code' list is found, return -1 for both distance and angle
         return -1, -1
     else:
+        # Otherwise, return the minimum distance and rotation angle of the nearest token
         return dist, rot_y
 
 # Function which returns the distance and the relative angle to the closest token
