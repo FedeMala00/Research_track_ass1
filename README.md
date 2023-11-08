@@ -82,7 +82,10 @@ for m in markers:
 [sr-api]: https://studentrobotics.org/docs/programming/sr/
 
 ### function descriptions ###
-`find_token_new` 
+Brief description of all the functions used.  
+
+#### `find_token_new` ####
+
 
 
 ### `main` function description ### 
