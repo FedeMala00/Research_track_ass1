@@ -90,7 +90,7 @@ This function is used in order to retrieve the relative distance and angle to a 
 `find_token` works the same way however allows the robot to avoid grabbing a token which has already been grabbed beacause it checks between all the tokens in its field of view if the code is NOT contained in the `code_list` input and if so relative distance and angle are returned.
 
 #### `reach_token` and `reach_dist_rot` ####
-
+`reach_token` allows the robot 
 
 ### `main` function description ### 
 The first step is to find the token closest to the robot that is in its field of view, and it will be the clustering point. This is done by a `for` loop which allows to fill a list with the `i.centre.polar.length` that is the current token's distance to the Robot, then it is possible to retrieve the minimum value and the correspondent index which indicate the closest token.  
