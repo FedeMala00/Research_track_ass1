@@ -81,6 +81,10 @@ for m in markers:
 
 [sr-api]: https://studentrobotics.org/docs/programming/sr/
 
+### function descriptions ###
+`find_token_new` 
+
+
 ### `main` function description ### 
 The first step is to find the token closest to the robot that is in its field of view, and it will be the clustering point. This is done by a `for` loop which allows to fill a list with the `i.centre.polar.length` that is the current token's distance to the Robot, then it is possible to retrieve the minimum value and the correspondent index which indicate the closest token.  
 The code thus obtained is stored in a new list `list_grabbed_token`. 
